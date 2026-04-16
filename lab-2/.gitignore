@@ -1,0 +1,17 @@
+# Build outputs
+bin/
+obj/
+
+# VS Code
+.vs/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Log files (except git hooks log)
+*.log
+
+# Local environment files
+appsettings.Development.json

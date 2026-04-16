@@ -1,0 +1,117 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+:root {
+  --app-green: #2e7d32;
+  --app-green-dark: #1b5e20;
+  --app-green-hover: #256b2a;
+  --app-green-light: #e8f5e9;
+  --app-green-focus: #66bb6a;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.app-shell {
+  min-height: calc(100vh - 150px);
+}
+
+.skip-link {
+  position: absolute;
+  left: 0;
+  top: -40px;
+  z-index: 1050;
+  background: var(--app-green-dark);
+  color: #fff;
+  padding: 8px 12px;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+.page-header__title {
+  font-weight: 700;
+}
+
+.page-header__meta {
+  max-width: 65ch;
+}
+
+.dashboard-kpi__value {
+  font-weight: 700;
+  color: var(--app-green);
+}
+
+.bg-primary {
+  background-color: var(--app-green-dark) !important;
+}
+
+a {
+  color: var(--app-green);
+}
+
+a:hover {
+  color: var(--app-green-hover);
+}
+
+.btn-primary {
+  background-color: var(--app-green);
+  border-color: var(--app-green);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--app-green-hover);
+  border-color: var(--app-green-hover);
+}
+
+.btn-outline-primary {
+  color: var(--app-green);
+  border-color: var(--app-green);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  color: #fff;
+  background-color: var(--app-green);
+  border-color: var(--app-green);
+}
+
+.card {
+  border-top: 3px solid var(--app-green-light);
+}
+
+:focus-visible {
+  outline: 3px solid var(--app-green-focus);
+  outline-offset: 2px;
+}
+
+.state-banner {
+  border-width: 1px;
+}
+
+.entity-table__actions {
+  white-space: nowrap;
+}
+
+.details-grid__label {
+  font-weight: 600;
+}
+
+.details-grid__value {
+  word-break: break-word;
+}

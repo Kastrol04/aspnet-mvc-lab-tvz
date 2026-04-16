@@ -1,0 +1,102 @@
+@model VozniRedVlakova.Models.EntityDetailsViewModel
+@using System.Reflection
+@{
+    ViewData["Title"] = $"{Model.EntityTitle} - Details";
+
+    object? FormatValue(object? value)
+    {
+        if (value is null) return "-";
+        if (value is DateTime dt) return dt.ToString("dd.MM.yyyy HH:mm");
+        if (value is bool b) return b ? "Da" : "Ne";
+
+        if (value is System.Collections.IEnumerable enumerable && value is not string)
+        {
+            var values = new List<string>();
+            foreach (var entry in enumerable)
+            {
+                if (entry is null)
+                {
+                    continue;
+                }
+
+                var naziv = entry.GetType().GetProperty("Naziv")?.GetValue(entry)?.ToString();
+                var broj = entry.GetType().GetProperty("Broj")?.GetValue(entry)?.ToString();
+                var id = entry.GetType().GetProperty("Id")?.GetValue(entry)?.ToString();
+
+                if (!string.IsNullOrWhiteSpace(naziv))
+                {
+                    values.Add(naziv);
+                }
+                else if (!string.IsNullOrWhiteSpace(broj))
+                {
+                    values.Add($"Broj {broj}");
+                }
+                else if (!string.IsNullOrWhiteSpace(id))
+                {
+                    values.Add($"Id {id}");
+                }
+                else
+                {
+                    values.Add(entry.ToString() ?? "-");
+                }
+            }
+
+            return values.Count == 0 ? "-" : string.Join(", ", values);
+        }
+
+        var type = value.GetType();
+        if (type.IsClass && type != typeof(string))
+        {
+            var nazivProp = type.GetProperty("Naziv")?.GetValue(value)?.ToString();
+            var brojProp = type.GetProperty("Broj")?.GetValue(value)?.ToString();
+            var idProp = type.GetProperty("Id")?.GetValue(value)?.ToString();
+
+            if (!string.IsNullOrWhiteSpace(nazivProp)) return nazivProp;
+            if (!string.IsNullOrWhiteSpace(brojProp)) return $"Broj {brojProp}";
+            if (!string.IsNullOrWhiteSpace(idProp)) return $"Id {idProp}";
+            return type.Name;
+        }
+
+        return value;
+    }
+
+    var props = Model.Item?.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+        .Where(p => p.CanRead)
+        .ToList() ?? new List<PropertyInfo>();
+}
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-route-entity="@Model.EntityKey">@Model.EntityTitle</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Details</li>
+    </ol>
+</nav>
+
+<section class="page-header mb-3 d-flex flex-column flex-md-row gap-2 justify-content-between align-items-md-center">
+    <div>
+        <h1 class="h3 page-header__title">@Model.EntityTitle - detalji</h1>
+        <p class="text-muted mb-0">Pregled svih dostupnih atributa zapisa.</p>
+    </div>
+    <a class="btn btn-secondary btn-sm" asp-action="Index" asp-route-entity="@Model.EntityKey">Natrag na listu</a>
+</section>
+
+@if (Model.Item is null)
+{
+    <div class="alert alert-danger" role="alert">Detalji nisu pronađeni za odabrani zapis.</div>
+}
+else
+{
+    <div class="card shadow-sm border-0 details-grid">
+        <div class="card-body">
+            <dl class="row mb-0">
+                @foreach (var prop in props)
+                {
+                    var raw = prop.GetValue(Model.Item);
+                    <dt class="col-12 col-md-4 details-grid__label">@prop.Name</dt>
+                    <dd class="col-12 col-md-8 details-grid__value">@FormatValue(raw)</dd>
+                }
+            </dl>
+        </div>
+    </div>
+}

@@ -1,0 +1,27 @@
+@{
+    var state = (ViewData["PageState"]?.ToString() ?? "success").ToLowerInvariant();
+    var message = ViewData["PageMessage"]?.ToString() ?? string.Empty;
+
+    var cssClass = state switch
+    {
+        "loading" => "alert alert-info state-banner state-banner--loading",
+        "empty" => "alert alert-secondary state-banner state-banner--empty",
+        "error" => "alert alert-danger state-banner state-banner--error",
+        "success" => "alert alert-success state-banner state-banner--success",
+        _ => "alert alert-info state-banner"
+    };
+
+    var icon = state switch
+    {
+        "loading" => "⏳",
+        "empty" => "📭",
+        "error" => "⚠️",
+        "success" => "✅",
+        _ => "ℹ️"
+    };
+}
+
+<div class="@cssClass" role="alert" aria-live="polite">
+    <span class="me-2" aria-hidden="true">@icon</span>
+    <span>@message</span>
+</div>
